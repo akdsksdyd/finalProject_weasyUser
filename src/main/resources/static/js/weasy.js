@@ -1,43 +1,4 @@
 "use strict";
-/* gender 체크박스 - only one */
-$("input[name='gender']").on('click', function(){
-    if(this.checked) {
-        const checkboxes = $("input[name='gender']");
-        for(let ind = 0; ind < checkboxes.length; ind++){
-            checkboxes[ind].checked = false;
-        }
-        this.checked = true;
-    } else {
-        this.checked = false;
-    }
-});
-
-/* 이메일 중복확인 기능 */
-$(".doubleCheck_btn").on('click', function(){
-   
-	var email = $("input[name='userEmail']").val();
-	console.log(email);
-	$.ajax({
-		url:"../user/checkcheckEmail", //컨트롤러
-		type:"post",
-		data:JSON.stringify({"userEmail": email}),
-		contentType:"application/json",
-		success:function(result){
-			console.log("ajax반환값:" + result);
-			if(result == "0"){
-				$(".id_ok").css("display", "inline-block");
-				$(".id_already").css("display", "none");
-			}else{
-				$(".id_already").css("display", "inline-block");
-				$(".id_ok").css("display", "none");
-			}
-		}, 
-		error: function(){
-			alert("에러입니다");
-		}		
-	})
-	
-});
 
 /* 팀 클릭 시 teamNo전달 */
 $(".teamTask").click(function(e){

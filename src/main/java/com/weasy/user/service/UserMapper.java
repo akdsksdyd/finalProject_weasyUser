@@ -15,4 +15,6 @@ public interface UserMapper {
 	public UserVO login(UserVO vo);
 	//승인여부
 	public int permissionId(UserVO vo);
+	//로그인 날짜 저장
+	public int addLoginDate(String email);
 }
