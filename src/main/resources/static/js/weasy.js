@@ -359,6 +359,13 @@ $(".cat-sub-menu").on('click', 'button', function(e){
 			
 	var role = '';
 	/* 클릭한 메뉴 teamNo로 user의 권한 조회 */
+	getAuthority(teamNo, userEmail);
+		
+	/* 클릭한 메뉴 teamNo로 보드 task 조회*/
+	getTeamTask(teamNo, userEmail);
+})
+
+function getAuthority(teamNo, userEmail){
 	$.ajax({
 		url: "../getAuthority",
 		type: "post",
@@ -367,50 +374,55 @@ $(".cat-sub-menu").on('click', 'button', function(e){
 		success: function(result){
 			//옵저버 권한 이라면 글쓰기 기능 제한 
 			if(result.role == 1){
-						/* task추가 부분 비활성화 */
-						$(".addTaskBox").css("display", "none");
-						
-						/* input태그 readonly추가 */
-						$("#card_modal input").each(function(index, item){
-		       				$(item).attr("readonly",true);
-		   				});
-		   				
-						/* textarea태그 readonly추가 */
-		   				$("#card_modal textarea").each(function(index, item){
-		       				$(item).attr("readonly",true);
-		   				});
-		   				
-		   				/* x버튼을 제외한 모든 버튼 비활성화 */
-		   				$("#card_modal button").each(function(index, item){
-							$(item).attr("disabled", true);
-		   				});
-		   				
-					}else{
-						/* task추가 부분 활성화 */
-						$(".addTaskBox").css("display", "block");
-						
-						/* input태그 readonly 해제 */
-						$("#card_modal input").each(function(index, item){
-		       				$(item).attr("readonly",false);
-		   				});
-		   				/* textarea태그 readonly 해제 */
-		   				$("#card_modal textarea").each(function(index, item){
-		       				$(item).attr("readonly",false);
-		   				});
-		   				/* x버튼을 제외한 모든 버튼 활성화 */
-		   				$("#card_modal button").each(function(index, item){
-							$(item).attr("disabled", false);
-		   				});
-					}
-				},
-				error: function(err){
-				}
-			});
-		
-		/* 클릭한 메뉴 teamNo로 보드 task 조회*/
-		getTeamTask(teamNo, userEmail);
-})
+				disabledWrite();
+			}else{
+				ableWrite();
+			}
+		},
+		error: function(err){
+		}
+	});
+}
 
+/* 옵저버 권한인 보드의 write기능 비활성화 */
+function disabledWrite(){
+	/* task추가 부분 비활성화 */
+	$(".addTaskBox").css("display", "none");
+							
+	/* input태그 readonly추가 */
+	$("#card_modal input").each(function(index, item){
+		$(item).attr("readonly",true);
+	});
+			   				
+	/* textarea태그 readonly추가 */
+	$("#card_modal textarea").each(function(index, item){
+		$(item).attr("readonly",true);
+	});
+			   				
+	/* x버튼을 제외한 모든 버튼 비활성화 */
+	$("#card_modal button").each(function(index, item){
+		$(item).attr("disabled", true);
+	});
+}
+
+/* 멤버 권한인 보드의 write기능 활성화 */
+function ableWrite(){
+	/* task추가 부분 활성화 */
+	$(".addTaskBox").css("display", "block");
+							
+	/* input태그 readonly 해제 */
+	$("#card_modal input").each(function(index, item){
+		$(item).attr("readonly",false);
+	});
+	/* textarea태그 readonly 해제 */
+	$("#card_modal textarea").each(function(index, item){
+		$(item).attr("readonly",false);
+	});
+	/* x버튼을 제외한 모든 버튼 활성화 */
+	$("#card_modal button").each(function(index, item){
+		$(item).attr("disabled", false);
+	});
+}
 
 function getTeamTask(teamNo, userEmail){
 	var todo_task = "";
@@ -578,6 +590,8 @@ $("#mainBoardPage").on('click', 'article', function(e){
 	taskValue += '<input type="hidden" id="userEmail" name="userEmail" value="'+ userEmail +'">';
 	console.log("hidden태그의 teamNo: "+teamNo);
 	$(".addTaskValue").html(taskValue);
+	
+	getAuthority(teamNo, userEmail);
 	
 	/* 클릭한 메뉴 teamNo로 보드 task 조회*/
 	getTeamTask(teamNo, userEmail);
